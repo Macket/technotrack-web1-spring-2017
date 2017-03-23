@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+    <b>{{ object.id }}</b><br/>
+    <a href="{% url "blogs:blog_list" %}">All blogs</a>
+    <p>{{ object.title}}</p>
+    <p>{{ object.description}}</p>
+    <p>{{ object.author.username }}</p>
+    <p>{{ object.updated_at}}</p>
+
+    {% if object.post_set.all %}
+
+    <div>
+    <h1>Посты</h1>
+    {% for post in object.post_set.all %}
+        <a href="{% url "blogs:post_view" pk=post.id%}">{{ post.title }}</a>
+        <i>{{ post.text }}</i><br/>
+    {% endfor %}
+    </div>
+
+    {% endif %}
+
+{% endblock %}

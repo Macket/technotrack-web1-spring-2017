@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+    <a href="{% url "core:home_page"%}">Home</a>
+    <div>Блоги</div>
+    {% for blog in object_list %}
+        <div>
+            <a href="{% url "blogs:blog_view" pk=blog.id%}">
+            {{ blog.title }}</a>
+            <div>{{ blog.description }}</div>
+        </div>
+    {% endfor %}
+{% endblock %}

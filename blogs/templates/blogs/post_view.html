@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+
+{% block title %}Посты блога{% endblock %}
+
+{% block content %}
+        <div>
+            <a href="{% url "blogs:blog_view" pk=object.blog.id%}">
+            {{ object.title }}</a>
+            <div>{{ object.description }}</div>
+            <div>{{ object.author.first_name }}</div>
+            <p>{{ object.updated_at}}</p>
+        </div>
+
+        <div>Комментарии</div>
+        {% for comment in object.comments.all %}
+            <div>
+                {{ comment.text }}
+            </div>
+            <p>{{ object.updated_at}}</p>
+        {% endfor %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    Привет, {{ user.username }}
+    <img src="{{ user.avatar.url }}" width="3%">
+    <h1><a href ="{% url "blogs:blog_list" %}">Список блогов</a></h1>
+    <p>Количество блогов: <b>{{ blog_count }}</b></p>
+    <p>Количество постов: <b>{{ post_count }}</b></p>
+{% endblock %}
