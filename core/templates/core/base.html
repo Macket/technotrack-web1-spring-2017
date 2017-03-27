@@ -1,10 +1,20 @@
 <html>
 
     <head>
-        <title>{%  block title %}{% endblock %}</title>
+        <title>Болг</title>
     </head>
 
     <body>
+        <h1>
+            {% block title %}
+                {% if user.is_anonymous %}
+                    <a href="{% url "core:login" %}">Войти</a>
+                {% else %}
+                    {{ user.username }}
+                    <a href="{% url "core:logout" %}">Выйти</a>
+                {% endif %}
+            {% endblock %}
+        </h1>
         {%  block content %}{% endblock %}
     </body>
 

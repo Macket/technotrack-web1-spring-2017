@@ -1,21 +1,26 @@
 {% extends "core/base.html" %}
 
-{% block title %}Посты блога{% endblock %}
+{% block title %}{% endblock %}
 
 {% block content %}
         <div>
-            <a href="{% url "blogs:blog_view" pk=object.blog.id%}">
-            {{ object.title }}</a>
-            <div>{{ object.description }}</div>
-            <div>{{ object.author.first_name }}</div>
-            <p>{{ object.updated_at}}</p>
+            <a href="{% url "blogs:blog_view" pk=post.blog.id %}">
+            {{ post.title }}</a>
+            <div>{{ post.text }}</div>
+            <div>{{ post.author.first_name }}</div>
+            <p>{{ post.updated_at}}</p>
         </div>
 
         <div>Комментарии</div>
-        {% for comment in object.comments.all %}
+        {% for comment in post.comments.all %}
             <div>
                 {{ comment.text }}
             </div>
-            <p>{{ object.updated_at}}</p>
+{#            <p>{{ object.updated_at}}</p>#}
         {% endfor %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" value="Комментировать">
+        </form>
 {% endblock %}

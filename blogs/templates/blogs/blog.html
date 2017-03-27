@@ -3,7 +3,10 @@
 {% block content %}
 
     <b>{{ object.id }}</b><br/>
-    <a href="{% url "blogs:blog_list" %}">All blogs</a>
+    <a href="{% url "blogs:blog_list" %}">All blogs</a><br/>
+    {% for category in  object.categories.all%}
+        {{ category.name }}
+    {% endfor %}
     <p>{{ object.title}}</p>
     <p>{{ object.description}}</p>
     <p>{{ object.author.username }}</p>

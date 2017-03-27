@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+    <form method="post"  enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>{{ form.username.label_tag }}{{ form.username }}</div>
+        <div>{{ form.avatar.label_tag }}{{ form.avatar }}</div>
+        <div>{{ form.password1.label_tag }}{{ form.password1 }}</div>
+        <div>{{ form.password2.label_tag }}{{ form.password2 }}</div>
+        <input type="submit" value="Зарегистрироваться">
+    </form>
+{% endblock %}

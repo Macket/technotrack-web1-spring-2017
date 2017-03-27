@@ -1,14 +1,26 @@
 {% extends "core/base.html" %}
 
-{% block title %}{% endblock %}
 
 {% block content %}
     <a href="{% url "core:home_page"%}">Home</a>
     <div>Блоги</div>
+
+    <div>
+        <form method="get" action="{% url "blogs:blog_list" %}">
+            {{ sortform.sort }}
+            {{ sortform.search.label_tag }}{{ sortform.search }}
+            <input type="submit">
+        </form>
+    </div>
+
+    <h3><a href="{%  url "blogs:createblog" %}">Создать новый блог</a></h3>
+
     {% for blog in object_list %}
         <div>
-            <a href="{% url "blogs:blog_view" pk=blog.id%}">
-            {{ blog.title }}</a>
+            <a href="{% url "blogs:blog_view" pk=blog.id%}">{{ blog.title }}</a>
+            {% if blog.author == user %}
+                <a href="{% url "blogs:editblog" pk=blog.id%}">Редактировать</a>
+            {% endif %}
             <div>{{ blog.description }}</div>
         </div>
     {% endfor %}

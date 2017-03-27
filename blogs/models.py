@@ -25,3 +25,11 @@ class Post(models.Model):
         verbose_name = u'Пост'
         verbose_name_plural = u'Посты'
         ordering = ('-updated_at',)
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    blogs = models.ManyToManyField(Blog, related_name='categories')
+
+    class Meta:
+        verbose_name = u'Категория'
+        verbose_name_plural = u'Категории'

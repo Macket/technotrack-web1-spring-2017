@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+    <b>{{ object.id }}</b><br/>
+    <a href="{% url "blogs:blog_view" pk=post.blog.id%}">Блог</a>
+    <p>{{ object.title}}</p>
+    <p>{{ object.description}}</p>
+    <p>{{ object.author.username }}</p>
+    <p>{{ object.updated_at}}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <input type="submit" value="Отправить">
+    </form>
+
+{% endblock %}
