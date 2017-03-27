@@ -3,7 +3,7 @@ from django import forms
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from comments.models import Comment
-from .models import Blog, Post
+from .models import Blog, Post, Category
 
 
 class SortForm(forms.Form):
@@ -35,10 +35,15 @@ class CreateBlog(CreateView):
 
     template_name = "blogs/addblog.html"
     model = Blog
-    fields = ('title', 'description')
+    fields = ('title', 'description', 'category')
 
     def get_success_url(self):
         return resolve_url('blogs:blog_view', pk=self.object.pk)
+
+    def get_form(self, form_class=None):
+        form = super(CreateBlog, self).get_form()
+        form.fields['category'].queryset = Category.objects.all()
+        return form
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -121,7 +126,7 @@ class UpdatePost(UpdateView):
     fields = ('title', 'text')
 
     def get_success_url(self):
-        return resolve_url('blogs:blog_view', pk=self.object.id)
+        return resolve_url('blogs:blog_view', pk=self.object.blog.id)
 
     def get_queryset(self):
         return super(UpdatePost, self).get_queryset().filter(author=self.request.user)

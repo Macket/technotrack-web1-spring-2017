@@ -2,12 +2,16 @@
 
 {% block content %}
 
-    <b>{{ object.id }}</b><br/>
-    <a href="{% url "blogs:blog_view" pk=post.blog.id%}">Блог</a>
-    <p>{{ object.title}}</p>
-    <p>{{ object.description}}</p>
-    <p>{{ object.author.username }}</p>
-    <p>{{ object.updated_at}}</p>
+    <a href="{% url "core:home_page"%}">Домашняя страница</a>
+    >>
+    <a href="{% url "blogs:blog_list" %}">Все блоги</a><br/>
+    >>
+    <a href="{% url "blogs:blog_view" pk=post.blog.id %}">Блог {{ post.blog.title }}</a>
+    <p>id: {{ object.id}}</p>
+    <p>Название: {{ object.title}}</p>
+    <p>Текст: {{ object.text}}</p>
+    <p>Автор: {{ object.author.username }}</p>
+    <p>Дата последнего изменения: {{ object.updated_at}}</p>
 
     <form method="post">
         {% csrf_token %}

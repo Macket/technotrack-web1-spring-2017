@@ -1,10 +1,13 @@
 {% extends "core/base.html" %}
 
 {% block content %}
-
-    <b>{{ object.id }}</b><br/>
-    <a href="{% url "blogs:blog_view" pk=post.blog.id %}"></a>
-    <p>{{ object.title }}</p>
+    <a href="{% url "core:home_page"%}">Домашняя страница</a>
+    >>
+    <a href="{% url "blogs:blog_list" %}">Все блоги</a><br/>
+    >>
+    <a href="{% url "blogs:blog_view" pk=blog.id %}">{{ blog.title }}</a>
+    <br/>
+    <p>{{ object.title }} id = {{ object.id }}</p>
     <p>{{ object.text }}</p>
     <p>{{ object.author.username }}</p>
     <p>{{ object.updated_at }}</p>
