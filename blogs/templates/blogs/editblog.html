@@ -1,21 +1,9 @@
-{% extends "core/base.html" %}
-
-{% block content %}
-    <a href="{% url "core:home_page"%}">Домашняя страница</a>
-    >>
-    <a href="{% url "blogs:blog_list" %}">Все блоги</a><br/>
-    >>
-    <a href="{% url "blogs:blog_view" pk=blog.id %}">{{ blog.title }}</a>
-    <br/>
-    <p>{{ object.title }} id = {{ object.id }}</p>
-    <p>{{ object.text }}</p>
-    <p>{{ object.author.username }}</p>
-    <p>{{ object.updated_at }}</p>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_table }}
-        <input type="submit" value="Отправить">
-    </form>
-
-{% endblock %}
+{% load widget_tweaks %}
+<form method="post" class="ajax-form" action="{% url "blogs:editblog" pk=blog.id%}">
+    {% csrf_token %}
+    <label>Название</label>
+    {% render_field form.title type="text" class="form-control" placeholder="Название" %}
+    <label>Описание</label>
+    {% render_field form.description type="text" class="form-control" placeholder="Описание" %}
+    <input type="submit"value="Сохранить">
+</form>

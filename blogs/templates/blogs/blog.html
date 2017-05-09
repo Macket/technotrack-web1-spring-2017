@@ -1,40 +1,78 @@
 {% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "blogs/blogs.css" %}">
+{% endblock %}
 
 {% block content %}
 
-    <a href="{% url "core:home_page"%}">Домашняя страница</a>
-    >>
-    <a href="{% url "blogs:blog_list" %}">Все блоги</a><br/>
+    <ol class="breadcrumb">
+        <li><a href="{% url "core:home_page"%}">Домашняя страница</a></li>
+        <li><a href="{% url "blogs:blog_list" %}">Блоги</a><br/></li>
+        <li class="active">Блог {{ object.title }}</li>
+    </ol>
 
-    {% if object.category.all %}
-        <h4><a>Категории: </a></h4>
-        {% for category in  object.category.all%}
-            <p>{{ forloop.counter }}){{ category.name }}</p>
-    {% endfor %}
-    {% endif %}
-    <p>id: {{ object.id}}</p>
-    <p>Название: {{ object.title}}</p>
-    <p>Описание: {{ object.description}}</p>
-    <p>Автор: {{ object.author.username }}</p>
-    <p>Дата последнего изменения: {{ object.updated_at}}</p>
-    {% if blog.author == user %}
-        <a href="{% url "blogs:editblog" pk=blog.id%}">Редактировать блог</a>
-    {% endif %}
-
-    {% if object.post.all %}
-
-    <div>
-    <h1>Посты</h1>
-    {% for post in object.post.all %}
-        <br/>
-        <a href="{% url "blogs:post_view" pk=post.id%}">{{ post.title }}</a>
-        <i>{{ post.text }}</i><br/>
-        {% if blog.author == user %}
-            <a href="{% url "blogs:editpost" pk=post.id%}">Редактировать пост</a>
-        {% endif %}<br/>
-    {% endfor %}
+    <div class="panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                Информация
+              </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <ul class="list-group thirty_cent">
+                        {% if object.category.all %}
+                        <li class="list-group-item">
+                            {% for category in  object.category.all%}
+                                <span class="badge my_color">{{ category.name }}</span>
+                            {% endfor %}
+                            <h4>Категории</h4>
+                        </li>
+                    {% endif %}
+                    <li class="list-group-item">
+                        <span class="badge my_color">{{ object.id}}</span>
+                        <h4>id</h4>
+                    </li>
+                    <div class="list-group-item">
+                        <h4>Название</h4>
+                        <div class="list-group-item-text">{{ object.title}}</div>
+                    </div>
+                    <div class="list-group-item">
+                        <h4>Описание</h4>
+                        <div class="list-group-item-text">{{ object.description}}</div>
+                    </div>
+                    <div class="list-group-item">
+                        <h4>Автор</h4>
+                        <div class="list-group-item-text">{{ object.author.username }}</div>
+                    </div>
+                    <div class="list-group-item">
+                        <h4>Дата последнего изменения</h4>
+                        <div class="list-group-item-text">{{ object.updated_at}}</div>
+                    </div>
+                    <div class="list-group-item">
+                        {% if blog.author == user %}
+                            <a class="dialog-link" href="{% url "blogs:editblog" pk=blog.id%}">Редактировать блог</a>
+                        {% endif %}
+                    </div>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    {% endif %}
+    <div class="list list-group">
+      <a href="#" class="list-group-item active">Посты</a>
+        {% for post in object.post.all %}
+                <div class="list-group-item">
+                    {% if blog.author == user %}
+                        <a href="{% url "blogs:editpost" pk=post.id%}" class="badge pull-right dialog-link">Редактировать</a>
+                    {% endif %}
+                    <a href="{% url "blogs:post_view" pk=post.id%}" class="navbar-link">{{ post.title }}</a>
+                    <div class="list-group-item-text">{{ post.updated_at }}</div>
+                </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

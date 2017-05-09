@@ -1,21 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
 <html>
 
     <head>
         <title>Болг</title>
+        <link rel="stylesheet" href="{% static "core/base.css" %}">
+        <link rel="stylesheet" href="{% static "core/bootstrap/dist/css/bootstrap.min.css" %}">
+        <link rel="stylesheet" href="{% static "core/bootstrap/dist/css/bootstrap.css" %}">
+        <script src="{% static "core/jquery/jquery.min.js" %}"></script>
+        <script src="{% static "core/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+        <script src="{% static "core/js/base.js" %}"></script>
+        <meta name="csrf" content="{{ csrf_token }}">
+        {% block extra_css %}{% endblock %}
     </head>
 
     <body>
-        <h1>
-            {% block title %}
-                {% if user.is_anonymous %}
-                    <a href="{% url "core:login" %}">Войти</a>
-                {% else %}
-                    {{ user.username }}
-                    <a href="{% url "core:logout" %}">Выйти</a>
-                {% endif %}
-            {% endblock %}
-        </h1>
-        {%  block content %}{% endblock %}
+
+        {% block menu_user %}
+
+            <!-- Диалоговое коно -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">Вход/Регистрация</h4>
+                  </div>
+                  <div class="modal-body"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dropdown dropdown_user">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Пользователь
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                      {% if user.is_anonymous %}
+                          <li><a class="dialog-link" href="{% url "core:registration" %}">Регистрация</a></li>
+                          <li><a class="dialog-link" href="{% url "core:login" %}">Войти</a></li>
+                      {% else %}
+                        <li><a href="{% url "core:logout" %}">Выйти</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a href={% url "core:home_page" %}>{{ user.username }}</a></li>
+                      {% endif %}
+                </ul>
+            </div>
+        {% endblock %}
+
+        <div class="content">{%  block content %}{% endblock %}</div>
+
+        <footer class="alert alert-info">Нашли ошибку на странице? Напишите нам - <a href="mail to: makeev@phystecg.edu">Вот адрес</a></footer>
+
     </body>
 
 </html>

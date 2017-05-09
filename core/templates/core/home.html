@@ -1,11 +1,25 @@
 {% extends "core/base.html" %}
 
-
 {% block content %}
-    <h1><a href="{% url "core:registration" %}">Регистрация</a></h1>
-    Привет, {{ user.username }}
-    <img src="{{ user.avatar.url }}" width="3%">
-    <h1><a href ="{% url "blogs:blog_list" %}">Список блогов</a></h1>
-    <p>Количество блогов: <b>{{ blog_count }}</b></p>
-    <p>Количество постов: <b>{{ post_count }}</b></p>
+    <div class="page-header">
+        {% if user.is_anonymous %}
+            <h1>Привет!</h1>
+        {% else %}
+            <h1>Привет, {{ user.username }}
+                <img src="{{ user.avatar.url }}" width="5%" class="img-circle">
+            </h1>
+        {% endif %}
+
+    </div>
+    <button class="btn btn-primary" type="button">
+        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+        Количество блогов: <span class="badge">{{ blog_count }}</span>
+    </button>
+
+    <button class="btn btn-primary" type="button">
+        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+        Количество постов: <span class="badge">{{ post_count }}</span>
+    </button>
+    <nav><h1><a href ="{% url "blogs:blog_list" %}">Список блогов</a></h1></nav>
+
 {% endblock %}

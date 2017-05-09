@@ -1,32 +1,60 @@
 {% extends "core/base.html" %}
+{% load widget_tweaks %}
 
 {% block title %}{% endblock %}
 
 {% block content %}
-        <div>
-            <a href="{% url "core:home_page"%}">Домашняя страница</a>
-            >>
-            <a href="{% url "blogs:blog_list" %}">Все блоги</a><br/>
-            >>
-            <a href="{% url "blogs:blog_view" pk=post.blog.id %}">Блог {{ post.blog.title }}</a>
-            <div>{{ post.text }}</div>
-            <div>{{ post.author.first_name }}</div>
-            <p>{{ post.updated_at}}</p>
-            {% if post.author == user %}
-                <a href="{% url "blogs:editpost" pk=post.id%}">Редактировать</a>
-            {% endif %}<br/>
-        </div>
+    <ol class="breadcrumb">
+        <li><a href="{% url "core:home_page"%}">Домашняя страница</a></li>
+        <li><a href="{% url "blogs:blog_list" %}">Блоги</a><br/></li>
+        <li><a href="{% url "blogs:blog_view" pk=post.blog.id %}">Блог {{ post.blog.title }}</a><br/></li>
+        <li class="active">Пост {{ post.title }}</li>
+    </ol>
+    <div>
 
-        <div>Комментарии</div>
-        {% for comment in post.comments.all %}
-            <div>
-                {{ comment.text }}
+            <!-- Диалоговое коно -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">Редактирование поста</h4>
+          </div>
+          <div class="modal-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 col-md-0 col-sm-2"></div>
+        <div class="col-xs-12 col-md-6 col-sm-8">
+            <div class="jumbotron"><h2 class="text-center">{{ post.title }}</h2>
+                <div class="container"><article>{{ post.text }}</article></div>
             </div>
 
-        {% endfor %}
-        <form method="post">
-            {% csrf_token %}
-            {{ form }}
-            <input type="submit" value="Комментировать">
-        </form>
+            <div class="text-right">
+            Лукасы:<span class="like" data-url="{% url "blogs:post_likes" pk=post.id %}" id="likes-{{ post.id }}"></span><br>
+            <button class="btn ajaxlike" data-url="{% url "blogs:post_likes" pk=post.id %}" data-postid="{{ post.id }}">Поставить лукас</button>
+            </div>
+
+            <div class="text-right">{{ post.author.username }}</div>
+            <div class="text-right">{{ post.updated_at }}</div>
+            {% if post.author == user %}
+                <div class="text-right"><a class="dialog-link" href="{% url "blogs:editpost" pk=post.id%}">Редактировать</a></div>
+            {% endif %}
+
+            <h3>Комментарии</h3>
+            <div class="row autoload" data-url="{% url "blogs:commentsource" pk=post.id %}"></div>
+
+            <div class="input-group">
+                    <form method="post">
+                        {% csrf_token %}
+                            <input type="submit" value="Комментировать"></input>
+                        {% render_field form.text add_class="form-control" rows="3" %}
+                    </form>
+            </div>
+
+        </div>
+    </div>
+
 {% endblock %}

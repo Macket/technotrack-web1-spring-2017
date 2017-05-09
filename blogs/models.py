@@ -11,6 +11,9 @@ class Category(models.Model):
         verbose_name = u'Категория'
         verbose_name_plural = u'Категории'
 
+    def __unicode__(self):
+        return self.name
+
 
 class Blog(models.Model):
     title = models.CharField(max_length=255)
@@ -23,6 +26,9 @@ class Blog(models.Model):
         verbose_name = u'Блог'
         verbose_name_plural = u'Блоги'
         ordering = ('-updated_at',)
+
+    def __unicode__(self):
+        return self.title
 
 
 class Post(models.Model):
@@ -37,3 +43,16 @@ class Post(models.Model):
         verbose_name_plural = u'Посты'
         ordering = ('-updated_at',)
 
+
+    def __unicode__(self):
+        return self.title
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, related_name='likes')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='likes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = u'Лайк'
+        verbose_name_plural = u'Лайки'
+        ordering = ('-created_at',)

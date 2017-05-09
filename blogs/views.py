@@ -1,9 +1,10 @@
 # coding: utf-8
 from django import forms
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
-from django.views.generic import ListView, DetailView, UpdateView, CreateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, View
 from comments.models import Comment
-from .models import Blog, Post, Category
+from .models import Blog, Post, Category, Like
 
 
 class SortForm(forms.Form):
@@ -29,6 +30,10 @@ class UpdateBlog(UpdateView):
 
     def get_queryset(self):
         return super(UpdateBlog, self).get_queryset().filter(author = self.request.user)
+
+    def form_valid(self, form):
+        response = super(UpdateBlog, self).form_valid(form)
+        return HttpResponse('OK')
 
 
 class CreateBlog(CreateView):
@@ -130,3 +135,29 @@ class UpdatePost(UpdateView):
 
     def get_queryset(self):
         return super(UpdatePost, self).get_queryset().filter(author=self.request.user)
+
+    def form_valid(self, form):
+        response = super(UpdatePost, self).form_valid(form)
+        return HttpResponse('OK')
+
+class CommentSourceView(DetailView):
+    queryset = Post.objects.all()
+    template_name = "blogs/commentsource.html"
+
+class LikeView(View):
+
+    def dispatch(self, request, pk=None, *args, **kwargs):
+        self.postobject = get_object_or_404(Post, id=pk)
+        return super(LikeView, self).dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if not self.postobject.likes.filter(author=self.request.user).exists():
+            like = Like()
+            like.post = self.postobject
+            like.author = self.request.user
+            like.save()
+        return HttpResponse(self.postobject.likes.count())
+
+    def get(self, request):
+        return HttpResponse(self.postobject.likes.count())
+

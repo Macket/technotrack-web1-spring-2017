@@ -1,0 +1,12 @@
+{% for comment in post.comments.all %}
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>{{ comment.text }}</p>
+            </div>
+            <div class="panel-footer">{{ comment.author.username }}</div>
+        </div>
+    </div>
+{% empty %}
+    <div class="col-md-12">Комментариев пока нет</div>
+{% endfor %}

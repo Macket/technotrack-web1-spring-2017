@@ -1,13 +1,16 @@
-{% extends "core/base.html" %}
+{% load widget_tweaks %}
 
-{% block content %}
-    <a href="{% url "core:home_page"%}">Домашняя страница</a>
-    <form method="post"  enctype="multipart/form-data">
-        {% csrf_token %}
-        <div>{{ form.username.label_tag }}{{ form.username }}</div>
-        <div>{{ form.avatar.label_tag }}{{ form.avatar }}</div>
-        <div>{{ form.password1.label_tag }}{{ form.password1 }}</div>
-        <div>{{ form.password2.label_tag }}{{ form.password2 }}</div>
-        <input type="submit" value="Зарегистрироваться">
-    </form>
-{% endblock %}
+<form role="form" method="post" enctype="multipart/form-data"  class="ajax-form" action="{% url "core:registration" %}">
+    {% csrf_token %}
+    {% render_field form.username type="text" class="form-control" placeholder="Имя" %}<br>
+    {% render_field form.password1 type="password" class="form-control" placeholder="Пароль" %}<br>
+    {% render_field form.password2 type="password" class="form-control" placeholder="Подтвердите пароль" %}<br>
+    <label for="{{ form.avatar.id_for_label }}">Аватар</label>
+        {{ form.avatar }}
+    <p class="help-block">Файл должен быть в формате jpg</p>
+    <input type="submit" value="Зарегистрироваться">
+</form>
+
+
+
+
