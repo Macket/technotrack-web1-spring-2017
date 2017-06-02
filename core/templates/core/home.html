@@ -1,7 +1,17 @@
 {% extends "core/base.html" %}
 
+{% block navigation %}
+    <li class="active"><a class="glyphicon glyphicon-home" href="#"> Домашняя страница</a></li>
+{% endblock %}
+
+{% block side1 %}
+    <h4>Информация</h4>
+    Количество блогов: <span class="badge">{{ blog_count }}</span><br>
+    Количество постов: <span class="badge">{{ post_count }}</span>
+{%  endblock %}
+
 {% block content %}
-    <div class="page-header">
+        <h1 class="blog-title">
         {% if user.is_anonymous %}
             <h1>Привет!</h1>
         {% else %}
@@ -9,17 +19,12 @@
                 <img src="{{ user.avatar.url }}" width="5%" class="img-circle">
             </h1>
         {% endif %}
+    </h1>
+    <p class="lead blog-description">
+       <nav><h3><a href ="{% url "blogs:blog_list" %}">Перейти к списку блогов</a></h3></nav>
+    </p>
 
+    <div class="blog-post">
+        <h5 class="blog-post-title">На сайте можно создавать блоги и посты в них, ставить лайки, комментировать посты. Для этого необходимо пройти регистрацию. Или же вы можете просто почитать блоги других авторов.</h5>
     </div>
-    <button class="btn btn-primary" type="button">
-        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-        Количество блогов: <span class="badge">{{ blog_count }}</span>
-    </button>
-
-    <button class="btn btn-primary" type="button">
-        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
-        Количество постов: <span class="badge">{{ post_count }}</span>
-    </button>
-    <nav><h1><a href ="{% url "blogs:blog_list" %}">Список блогов</a></h1></nav>
-
 {% endblock %}

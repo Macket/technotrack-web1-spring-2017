@@ -1,5 +1,11 @@
 div.fifty_cent{
-    width: 50%;
+    width: 50%
+}
+
+.list-style{
+    background-color: lightgray;
+    color: #0f0f0f;
+    font-weight: 600
 }
 
 .my_color{

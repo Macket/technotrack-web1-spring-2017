@@ -5,69 +5,74 @@
     <link rel="stylesheet" href="{% static "blogs/blogs.css" %}">
 {% endblock %}
 
-{% block content %}
-
-    <ol class="breadcrumb">
-        <li><a href="{% url "core:home_page"%}">Домашняя страница</a></li>
-        <li><a href="{% url "blogs:blog_list" %}">Блоги</a><br/></li>
-        <li class="active">Блог {{ object.title }}</li>
-    </ol>
-
-    <div class="panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-                Информация
-              </a>
-            </h4>
+{% block dialog %}
+    <!-- Диалоговое окно для редактирования постов -->
+    <div class="modal fade" id="editpostModal" tabindex="-1" role="dialog" aria-labelledby="editpostModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="editpostModalLabel">Редактирование поста</h4>
+          </div>
+          <div class="modal-body"></div>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse in">
-            <div class="panel-body">
-                <ul class="list-group thirty_cent">
-                        {% if object.category.all %}
-                        <li class="list-group-item">
-                            {% for category in  object.category.all%}
-                                <span class="badge my_color">{{ category.name }}</span>
-                            {% endfor %}
-                            <h4>Категории</h4>
-                        </li>
-                    {% endif %}
-                    <li class="list-group-item">
-                        <span class="badge my_color">{{ object.id}}</span>
-                        <h4>id</h4>
-                    </li>
-                    <div class="list-group-item">
-                        <h4>Название</h4>
-                        <div class="list-group-item-text">{{ object.title}}</div>
-                    </div>
-                    <div class="list-group-item">
-                        <h4>Описание</h4>
-                        <div class="list-group-item-text">{{ object.description}}</div>
-                    </div>
-                    <div class="list-group-item">
-                        <h4>Автор</h4>
-                        <div class="list-group-item-text">{{ object.author.username }}</div>
-                    </div>
-                    <div class="list-group-item">
-                        <h4>Дата последнего изменения</h4>
-                        <div class="list-group-item-text">{{ object.updated_at}}</div>
-                    </div>
-                    <div class="list-group-item">
-                        {% if blog.author == user %}
-                            <a class="dialog-link" href="{% url "blogs:editblog" pk=blog.id%}">Редактировать блог</a>
-                        {% endif %}
-                    </div>
-                </ul>
-            </div>
-        </div>
+      </div>
     </div>
 
+     <!-- Диалоговое окно для редактирования блога -->
+    <div class="modal fade" id="editblogModal" tabindex="-1" role="dialog" aria-labelledby="editblogModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="editblogModalLabel">Редактирование блога</h4>
+          </div>
+          <div class="modal-body"></div>
+        </div>
+      </div>
+    </div>
+{%  endblock %}
+
+{% block navigation %}
+    <li><a class="glyphicon glyphicon-home" href="{% url "core:home_page"%}"> Домашняя страница</a></li>
+    <li><a class="glyphicon glyphicon-list" href="{% url "blogs:blog_list" %}"> Список блогов</a></li>
+    <li class="active"><a class="glyphicon glyphicon-book" href="#">{{ object.title }}</a></li>
+{% endblock %}
+
+{% block header %}
+    <h1 class="blog-title">{{ object.title}}</h1>
+    <p class="lead blog-description"><em>{{ object.description}}</em></p>
+{% endblock %}
+
+{% block side1 %}
+    {% if blog.author == user %}
+        <h4>Действия</h4>
+        <p><a class="text-left" href="{%  url "blogs:createpost" %}">Создать новый пост</a></p>
+        <p><a class="dialog-editblog-link text-right" href="{% url "blogs:editblog" pk=blog.id%}">Редактировать блог</a></p>
+    {% endif %}
+{% endblock %}
+
+{% block side2 %}
+    <h4>Информация</h4>
+    <p>Автор: {{ object.author.username }}</p>
+    <p>Категории:
+        {% for category in  object.category.all%}
+            <span class="badge">{{ category.name }}</span>
+        {% endfor %}
+    </p>
+    <p>id: <span class="badge">{{ object.id}}</span></p>
+    <p>Дата последнего изменения: {{ object.updated_at}}</p>
+{%  endblock %}
+
+
+{% block content %}
+
     <div class="list list-group">
-      <a href="#" class="list-group-item active">Посты</a>
+      <div class="list-group-item list-style">Посты</div>
         {% for post in object.post.all %}
                 <div class="list-group-item">
                     {% if blog.author == user %}
-                        <a href="{% url "blogs:editpost" pk=post.id%}" class="badge pull-right dialog-link">Редактировать</a>
+                        <a href="{% url "blogs:editpost" pk=post.id%}" class="badge pull-right dialog-editpost-link">Редактировать</a>
                     {% endif %}
                     <a href="{% url "blogs:post_view" pk=post.id%}" class="navbar-link">{{ post.title }}</a>
                     <div class="list-group-item-text">{{ post.updated_at }}</div>

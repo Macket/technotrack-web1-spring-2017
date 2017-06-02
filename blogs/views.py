@@ -7,6 +7,7 @@ from comments.models import Comment
 from .models import Blog, Post, Category, Like
 
 
+
 class SortForm(forms.Form):
 
     sort = forms.ChoiceField(
@@ -156,6 +157,8 @@ class LikeView(View):
             like.post = self.postobject
             like.author = self.request.user
             like.save()
+        else:
+            self.postobject.likes.filter(author=self.request.user).delete()
         return HttpResponse(self.postobject.likes.count())
 
     def get(self, request):

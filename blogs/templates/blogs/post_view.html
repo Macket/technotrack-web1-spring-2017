@@ -1,60 +1,71 @@
 {% extends "core/base.html" %}
 {% load widget_tweaks %}
 
-{% block title %}{% endblock %}
+{% block navigation %}
+    <li><a class="glyphicon glyphicon-home" href="{% url "core:home_page"%}"> Домашняя страница</a></li>
+    <li><a class="glyphicon glyphicon-list" href="{% url "blogs:blog_list" %}"> Список блогов</a></li>
+    <li><a class="glyphicon glyphicon-book" href="{% url "blogs:blog_view" pk=post.blog.id %}"> {{ post.blog.title }}</a></li>
+    <li class="active"><a class="glyphicon glyphicon-file" href="#">{{ post.title }}</a></li>
+{% endblock %}
 
-{% block content %}
-    <ol class="breadcrumb">
-        <li><a href="{% url "core:home_page"%}">Домашняя страница</a></li>
-        <li><a href="{% url "blogs:blog_list" %}">Блоги</a><br/></li>
-        <li><a href="{% url "blogs:blog_view" pk=post.blog.id %}">Блог {{ post.blog.title }}</a><br/></li>
-        <li class="active">Пост {{ post.title }}</li>
-    </ol>
-    <div>
-
-            <!-- Диалоговое коно -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+{% block dialog %}
+    <!-- Диалоговое окно для редактирования поста -->
+    <div class="modal fade" id="editpostModal" tabindex="-1" role="dialog" aria-labelledby="editpostModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="exampleModalLabel">Редактирование поста</h4>
+            <h4 class="modal-title" id="editpostModalLabel">Редактирование поста</h4>
           </div>
           <div class="modal-body"></div>
         </div>
       </div>
     </div>
+{%  endblock %}
 
-    <div class="row">
-        <div class="col-md-3 col-md-0 col-sm-2"></div>
-        <div class="col-xs-12 col-md-6 col-sm-8">
-            <div class="jumbotron"><h2 class="text-center">{{ post.title }}</h2>
-                <div class="container"><article>{{ post.text }}</article></div>
-            </div>
+{% block side1%}
+    {% if post.author == user %}
+        <h4>Действия</h4>
+        <p><a class="dialog-editpost-link" href="{% url "blogs:editpost" pk=post.id%}">Редактировать пост</a></p>
+    {% endif %}
+{% endblock %}
+
+{% block side2 %}
+    <h4>Все посты</h4>
+
+    <ol class="list-unstyled">
+        {% for post in post.blog.post.all %}
+                <li><a href="{% url "blogs:post_view" pk=post.id%}" class="navbar-link">{{ post.title }}</a></li>
+        {% endfor %}
+    </ol>
+{% endblock %}
+
+{% block content %}
+          <div class="blog-post">
+            <h2 class="blog-post-title">{{ post.title }}</h2>
+            <p class="blog-post-meta">{{ post.updated_at }}, <span>{{ post.author.username }}</span></p>
+
+              <p>{{ post.text }}</p>
+          </div><!-- /.blog-post -->
+
+
 
             <div class="text-right">
-            Лукасы:<span class="like" data-url="{% url "blogs:post_likes" pk=post.id %}" id="likes-{{ post.id }}"></span><br>
-            <button class="btn ajaxlike" data-url="{% url "blogs:post_likes" pk=post.id %}" data-postid="{{ post.id }}">Поставить лукас</button>
+            Понравилось:<span class="like" data-url="{% url "blogs:post_likes" pk=post.id %}" id="likes-{{ post.id }}"></span><br>
+            <button class="btn ajaxlike glyphicon glyphicon-heart" data-url="{% url "blogs:post_likes" pk=post.id %}" data-postid="{{ post.id }}"></button>
             </div>
-
-            <div class="text-right">{{ post.author.username }}</div>
-            <div class="text-right">{{ post.updated_at }}</div>
-            {% if post.author == user %}
-                <div class="text-right"><a class="dialog-link" href="{% url "blogs:editpost" pk=post.id%}">Редактировать</a></div>
-            {% endif %}
 
             <h3>Комментарии</h3>
             <div class="row autoload" data-url="{% url "blogs:commentsource" pk=post.id %}"></div>
 
-            <div class="input-group">
+            <span class="input">
                     <form method="post">
                         {% csrf_token %}
-                            <input type="submit" value="Комментировать"></input>
-                        {% render_field form.text add_class="form-control" rows="3" %}
+                        {% render_field form.text add_class="form-control" rows="1"%}
+                        <input type="submit" value="Комментировать">
                     </form>
-            </div>
+            </span>
 
-        </div>
-    </div>
+
 
 {% endblock %}

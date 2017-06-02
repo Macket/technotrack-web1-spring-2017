@@ -11,8 +11,20 @@ $(document).ready(function () {
     window.setInterval(autoload, 2000)
 
 
-    $('.dialog-link').click( function () {
-        $('#exampleModal').modal();
+    $('.dialog-login-link').click( function () {
+        $('#loginModal').modal();
+        $('.modal-body').load($(this).attr('href'));
+        return false
+    });
+
+    $('.dialog-editblog-link').click( function () {
+        $('#editblogModal').modal();
+        $('.modal-body').load($(this).attr('href'));
+        return false
+    });
+
+    $('.dialog-editpost-link').click( function () {
+        $('#editpostModal').modal();
         $('.modal-body').load($(this).attr('href'));
         return false
     });

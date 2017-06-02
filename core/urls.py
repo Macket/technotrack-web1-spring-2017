@@ -1,6 +1,6 @@
 from .views import *
 from django.conf.urls import url
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import logout
 
 urlpatterns = [
     url(r'^$', HomePageView.as_view(), name="home_page"),
