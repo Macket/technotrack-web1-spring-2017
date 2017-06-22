@@ -23,7 +23,15 @@ urlpatterns = [
     url(r'^', include('core.urls', namespace='core')),
 ]
 
+
 from django.conf import settings
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]
+
 if settings.DEBUG is True:
     from django.conf.urls.static import static
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

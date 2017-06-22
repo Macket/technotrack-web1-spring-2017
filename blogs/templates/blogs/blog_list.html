@@ -61,11 +61,20 @@
   <div class="list-group-item list-style">Блоги</div>
     {% for blog in object_list %}
             <div class="list-group-item">
-                {% if blog.author == user %}
+                {% if blog.author_id == user.id %}
                     <a href="{% url "blogs:editblog" pk=blog.id%}" class="badge pull-right dialog-editblog-link">Редактировать</a>
                 {% endif %}
                 <a href="{% url "blogs:blog_view" pk=blog.id%}" class="navbar-link">{{ blog.title }}</a>
                 <div class="list-group-item-text">{{ blog.description }}</div>
+                <p>
+                    <br>Автор: {{ blog.author.username }}
+                </p>
+                <p>
+                    <br>Всего лайков: {{ blog.likes_count }}
+                </p>
+                <p>
+                    <br>Всего комментов: {{ blog.comments_count }}
+                </p>
             </div>
     {% endfor %}
 </div>

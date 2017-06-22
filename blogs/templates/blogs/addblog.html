@@ -13,9 +13,8 @@
     <form method="post">
         {% csrf_token %}
         {% render_field form.title class="form-control" placeholder="Название" %}<br>
-        {% render_field form.description class="form-control" placeholder="Описание блога"%}
-        <h4>Категории</h4>
-        {% render_field form.category add_class="form-control" %}
+        {% render_field form.description class="form-control" placeholder="Описание блога"%}<br>
+        {% render_field form.category class="chosen-field chosen-select-deselect" data-placeholder="Категории" %}<br><br>
         <div class="text-right"><input type="submit" value="Создать"></div>
     </form>
 {% endblock %}

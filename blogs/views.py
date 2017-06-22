@@ -1,11 +1,15 @@
 # coding: utf-8
 from django import forms
+from django.db import models
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, View
+
 from comments.models import Comment
 from .models import Blog, Post, Category, Like
+import logging
 
+logger = logging.getLogger(__name__)
 
 
 class SortForm(forms.Form):
@@ -72,6 +76,7 @@ class BlogList(ListView):
 
     def get_queryset(self):
         qs = super(BlogList, self).get_queryset()
+        qs = qs.annotate_everything()
         if self.sortform.is_valid():
             qs = qs.order_by(self.sortform.cleaned_data['sort'])
             if self.sortform.cleaned_data['search']:
@@ -82,6 +87,11 @@ class BlogList(ListView):
 class BlogView(DetailView):
     template_name = "blogs/blog.html"
     queryset = Blog.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(BlogView, self).get_context_data(**kwargs)
+        context['posts'] = Post.objects.filter(blog=self.object).select_related('author', 'blog', 'blog__author')
+        return context
 
 
 class CreatePost(CreateView):
@@ -100,6 +110,7 @@ class CreatePost(CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        logger.info("New post created")
         return super(CreatePost,self).form_valid(form)
 
 
@@ -141,9 +152,11 @@ class UpdatePost(UpdateView):
         response = super(UpdatePost, self).form_valid(form)
         return HttpResponse('OK')
 
+
 class CommentSourceView(DetailView):
     queryset = Post.objects.all()
     template_name = "blogs/commentsource.html"
+
 
 class LikeView(View):
 
@@ -163,4 +176,3 @@ class LikeView(View):
 
     def get(self, request):
         return HttpResponse(self.postobject.likes.count())
-

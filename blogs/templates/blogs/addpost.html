@@ -13,9 +13,10 @@
         {% csrf_token %}
         {% render_field form.title class="form-control" placeholder="Название" %}<br>
         {% render_field form.text class="form-control" placeholder="Текст поста" %}<br>
-        {% render_field form.blog add_class="form-control" %}
+        {% render_field form.blog class="chosen-field chosen-select-deselect" data-placeholder="Выберите блог" %}<br><br>
         <div class="text-right"><input type="submit"value="Отправить"></div>
     </form>
+
 {% endblock %}
 
 

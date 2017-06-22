@@ -10,6 +10,7 @@ $(document).ready(function () {
 
     window.setInterval(autoload, 2000)
 
+    $('.chosen-field').chosen();
 
     $('.dialog-login-link').click( function () {
         $('#loginModal').modal();

@@ -69,12 +69,15 @@
 
     <div class="list list-group">
       <div class="list-group-item list-style">Посты</div>
-        {% for post in object.post.all %}
+        {% for post in posts %}
                 <div class="list-group-item">
-                    {% if blog.author == user %}
+                    {% if post.author == user %}
                         <a href="{% url "blogs:editpost" pk=post.id%}" class="badge pull-right dialog-editpost-link">Редактировать</a>
                     {% endif %}
                     <a href="{% url "blogs:post_view" pk=post.id%}" class="navbar-link">{{ post.title }}</a>
+                    <p>Автор: {{ post.author.username }}</p>
+                    <p>Блог: {{ post.blog.title }}</p>
+                    <p>Автор блог: {{ post.blog.author.username }}</p>
                     <div class="list-group-item-text">{{ post.updated_at }}</div>
                 </div>
         {% endfor %}
